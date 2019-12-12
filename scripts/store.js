@@ -1,58 +1,52 @@
-
-const items = [];
-let hideCheckedItems = false;
 import item from './item.js';
 
-const findById = function(id){
-  return items.find(item =>item.id ===id)
+const items = [];
+let hideCheckeditems = false;
+
+const findById = function (id) {
+  return this.items.find(currentItem => currentItem.id === id);
 };
 
-const addItem = function(name){
-try{
-item.validateName(name)
-let createdItem =item.create(name)
-this.items.push(createdItem)
-}
-catch(error){
-console.log(`${error.message}`)
-};
+const addItem = function (name) {
+  try {
+    item.validateName(name);
+    this.items.push(item.create(name));
+  } catch (e) {
+    console.log(e.message);
+  }
 };
 
-const findAndToggleChecked = function(id){
-let found =this.findById();
-found.checked =! found.checked
-
+const findAndToggleChecked = function (id) {
+  const currentItem = this.findById(id);
+  currentItem.checked = !currentItem.checked;
 };
 
-const findAndUpdateName = function(id, newName){
-try{
-  item.validateName(newName);
-  newName = findById(id);
-}
-catch(error){
-  console.log(`Cannot update name: ${error.message}`)
-}
+const findAndUpdateName = function (id, name) {
+  try {
+    item.validateName(name);
+    const currentItem = this.findById(id);
+    currentItem.name = name;
+  } catch (e) {
+    console.log('Cannot update name: ' + e.message);
+  }
+};
 
 const findAndDelete = function (id) {
-  const index = this.items.findIndex(item => item.id === id);
-  this.items.splice(index, 1);
-}
+  this.items = this.items.filter(currentItem => currentItem.id !== id);
 };
 
-const toggleCheckedFilter = function(){
+const toggleCheckedFilter = function () {
   this.hideCheckedItems = !this.hideCheckedItems;
-}
- 
+};
+
 export default {
-  items, 
-  hideCheckedItems,
+  items,
+  hideCheckeditems,
   findById,
   addItem,
   findAndToggleChecked,
   findAndUpdateName,
   findAndDelete,
   toggleCheckedFilter
-
-
 };
 

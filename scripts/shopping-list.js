@@ -1,6 +1,7 @@
+
+
 import store from './store.js';
 import item from './item.js';
-
 
 const generateItemElement = function (item) {
   let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
@@ -37,22 +38,12 @@ const render = function () {
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
   }
+
   // render the shopping list in the DOM
   const shoppingListItemsString = generateShoppingItemsString(items);
+
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
-};
-
-const addItemToShoppingList = function (itemName) {
-  try{
-   item.validateName(name);
-   const newItem = item.create(name);
-   store.items.push(newItem);
-   render();
-  }
-  catch{
-    console.log(`Cannot add item: ${error.message}`);
-  }
 };
 
 const handleNewItemSubmit = function () {
@@ -60,12 +51,10 @@ const handleNewItemSubmit = function () {
     event.preventDefault();
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
-    addItemToShoppingList(newItemName);
+    store.addItem(newItemName);
     render();
   });
 };
-
-
 
 const handleItemCheckClicked = function () {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
@@ -81,12 +70,6 @@ const getItemIdFromElement = function (item) {
     .data('item-id');
 };
 
-/**
- * Responsible for deleting a list item.
- * @param {string} id 
- */
-
-
 const handleDeleteItemClicked = function () {
   // like in `handleItemCheckClicked`, we use event delegation
   $('.js-shopping-list').on('click', '.js-item-delete', event => {
@@ -99,30 +82,19 @@ const handleDeleteItemClicked = function () {
   });
 };
 
-
-
-/**
- * Toggles the store.hideCheckedItems property
- */
-
-
-/**
- * Places an event listener on the checkbox
- * for hiding completed items.
- */
-const handleToggleFilterClick = function () {
-  $('.js-filter-checked').click(() => {
-    store.toggleCheckedFilter();
-    render();
-  });
-};
-
 const handleEditShoppingItemSubmit = function () {
   $('.js-shopping-list').on('submit', '.js-edit-item', event => {
     event.preventDefault();
     const id = getItemIdFromElement(event.currentTarget);
     const itemName = $(event.currentTarget).find('.shopping-item').val();
     store.findAndUpdateName(id, itemName);
+    render();
+  });
+};
+
+const handleToggleFilterClick = function () {
+  $('.js-filter-checked').click(() => {
+    store.toggleCheckedFilter();
     render();
   });
 };
@@ -140,4 +112,3 @@ export default {
   render,
   bindEventListeners
 };
-
